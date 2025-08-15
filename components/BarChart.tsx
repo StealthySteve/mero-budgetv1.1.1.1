@@ -121,18 +121,20 @@ const BarChart = ({ records }: { records: Record[] }) => {
       {
         label: 'Expenses',
         data: aggregatedData.map((item) => item.totalExpense),
-        backgroundColor: isDark ? 'rgba(255, 99, 132, 0.3)' : 'rgba(255, 99, 132, 0.2)',
-        borderColor: isDark ? 'rgba(255, 99, 132, 0.8)' : 'rgba(255, 99, 132, 1)',
+        backgroundColor: isDark ? 'rgba(239, 68, 68, 0.4)' : 'rgba(239, 68, 68, 0.3)',
+        borderColor: isDark ? 'rgba(239, 68, 68, 0.9)' : 'rgba(239, 68, 68, 1)',
         borderWidth: 1,
-        borderRadius: 2, // Rounded bar edges
+        borderRadius: 4,
+        borderSkipped: false,
       },
       {
         label: 'Income',
         data: aggregatedData.map((item) => item.totalIncome),
-        backgroundColor: isDark ? 'rgba(75, 192, 192, 0.3)' : 'rgba(75, 192, 192, 0.2)',
-        borderColor: isDark ? 'rgba(75, 192, 192, 0.8)' : 'rgba(75, 192, 192, 1)',
+        backgroundColor: isDark ? 'rgba(34, 197, 94, 0.4)' : 'rgba(34, 197, 94, 0.3)',
+        borderColor: isDark ? 'rgba(34, 197, 94, 0.9)' : 'rgba(34, 197, 94, 1)',
         borderWidth: 1,
-        borderRadius: 2, // Rounded bar edges
+        borderRadius: 4,
+        borderSkipped: false,
       },
     ],
   };
@@ -140,6 +142,10 @@ const BarChart = ({ records }: { records: Record[] }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false, // Allow flexible height
+    interaction: {
+      intersect: false,
+      mode: 'index' as const,
+    },
     plugins: {
       legend: {
         display: true,
@@ -147,10 +153,12 @@ const BarChart = ({ records }: { records: Record[] }) => {
         labels: {
           font: {
             size: isMobile ? 10 : 12,
+            weight: '500' as const,
           },
           color: isDark ? '#d1d5db' : '#374151',
           usePointStyle: true,
-          pointStyle: 'rect',
+          pointStyle: 'rectRounded',
+          padding: 15,
         },
       },
       title: {
@@ -164,7 +172,15 @@ const BarChart = ({ records }: { records: Record[] }) => {
         bodyColor: isDark ? '#d1d5db' : '#374151',
         borderColor: isDark ? '#374151' : '#e5e7eb',
         borderWidth: 1,
-        cornerRadius: 8,
+        cornerRadius: 12,
+        titleFont: {
+          size: isMobile ? 12 : 14,
+          weight: '600' as const,
+        },
+        bodyFont: {
+          size: isMobile ? 11 : 13,
+        },
+        padding: 12,
         callbacks: {
           label: function (context: { dataIndex: number; datasetIndex: number; parsed: { y: number } }) {
             const dataIndex = context.dataIndex;
@@ -201,7 +217,10 @@ const BarChart = ({ records }: { records: Record[] }) => {
           minRotation: isMobile ? 45 : 0,
         },
         grid: {
-          display: false, // Hide x-axis grid lines
+          display: true,
+          color: isDark ? 'rgba(55, 65, 81, 0.3)' : 'rgba(229, 231, 235, 0.5)',
+          drawOnChartArea: true,
+          drawTicks: false,
         },
       },
       y: {
@@ -224,7 +243,9 @@ const BarChart = ({ records }: { records: Record[] }) => {
           },
         },
         grid: {
-          color: isDark ? '#374151' : '#e0e0e0', // Dark mode grid lines
+          color: isDark ? 'rgba(55, 65, 81, 0.3)' : 'rgba(229, 231, 235, 0.5)',
+          drawOnChartArea: true,
+          drawTicks: false,
         },
         beginAtZero: true, // Start y-axis at zero for expenses
       },
@@ -232,7 +253,7 @@ const BarChart = ({ records }: { records: Record[] }) => {
   };
 
   return (
-    <div className='relative w-full h-64 sm:h-72 md:h-80'>
+    <div className='relative w-full h-64 sm:h-72 md:h-80 lg:h-96'>
       <Bar data={data} options={options} />
     </div>
   );
